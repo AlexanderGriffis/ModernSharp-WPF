@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <RootNamespace>ModernSharp_Base</RootNamespace>
+    <UseWPF>true</UseWPF>
+    <StartupObject>ModernSharp_Base.App</StartupObject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ModernUI.WPFCore" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ModernSharp-Modules\ModernSharp-Modules.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Controls\SettingsManager.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\ShortcutControl.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\ShortcutSettings.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\ThemeSettings.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
+</Project>

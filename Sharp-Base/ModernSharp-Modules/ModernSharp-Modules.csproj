@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <RootNamespace>ModernSharp_Modules</RootNamespace>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ModernUI.WPFCore" Version="2.0.0" />
+  </ItemGroup>
+
+</Project>
