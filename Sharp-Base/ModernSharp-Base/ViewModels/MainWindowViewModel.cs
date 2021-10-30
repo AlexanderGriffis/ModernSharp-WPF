@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
@@ -35,6 +36,7 @@ namespace ModernSharp_Base.ViewModels {
 
             SetFontSize();
             LoadSettings();
+            LoadShortcuts();
 
             PropertyChanged += MainWindow_AppearanceChanged;
             PropertyChanged += MainWindow_KeybindingsChanged;
@@ -165,6 +167,16 @@ namespace ModernSharp_Base.ViewModels {
 
             if (hasAccent)
                 try { SelectedAccent = (Color)ColorConverter.ConvertFromString(accent); } catch (Exception) { SelectedAccent = AccentColors.FirstOrDefault(); }
+        }
+
+        private void LoadShortcuts() {
+            foreach (AppShortcut sc in AppManager.ShortcutContainers) {
+                if (AppManager.SettingRead("KeysAccessKey", sc.Name, out string keyValue))
+                    sc.AccessKey = (Key)Enum.Parse(typeof(Key), keyValue);
+
+                if (AppManager.SettingRead("KeysModifierKey", sc.Name, out keyValue))
+                    sc.ModKeys = (ModifierKeys)Enum.Parse(typeof(ModifierKeys), keyValue);
+            }
         }
 
         private void UpdateVisualTheme() {

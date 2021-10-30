@@ -19,8 +19,6 @@ namespace ModernSharp_Base {
 
         public MainWindow() {
             InitializeComponent();
-            ViewModel = new MainWindowViewModel(this);
-            DataContext = ViewModel;
 
             #region Register Application Events
             // Register shortcut key combination checking event.
@@ -38,6 +36,9 @@ namespace ModernSharp_Base {
 
             // Register the shortcuts settings module.
             AppManager.RegisterSettings("Keybindings", new Uri("/Controls/ShortcutSettings.xaml", UriKind.Relative));
+
+            ViewModel = new MainWindowViewModel(this);
+            DataContext = ViewModel;
             #endregion
         }
 
