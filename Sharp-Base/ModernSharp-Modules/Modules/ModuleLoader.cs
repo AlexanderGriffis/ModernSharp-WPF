@@ -4,9 +4,9 @@ using System.IO;
 using System.Reflection;
 
 namespace ModernSharp_Modules.Modules {
-    public class ModuleLoader<T> where T : ModuleCore {
+    public class ModuleLoader<T> where T : ModuleViewModel {
         #region Properties
-        public Dictionary<string, T> ModuleCores { get; internal set; }
+        public Dictionary<string, ModuleCore> ModuleCores { get; internal set; }
 
         public HashSet<string> BlackListedModules { get; internal set; }
 
@@ -20,7 +20,7 @@ namespace ModernSharp_Modules.Modules {
             ImportDirectory = directory;
             RecursiveImport = recursiveImport;
 
-            ModuleCores = new Dictionary<string, T>();
+            ModuleCores = new Dictionary<string, ModuleCore>();
             BlackListedModules = new HashSet<string>();
         }
         #endregion
@@ -42,7 +42,7 @@ namespace ModernSharp_Modules.Modules {
 
             foreach (string file in Directory.GetFiles(ImportDirectory, "*.dll", (RecursiveImport) ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)) {
                 string assemblyName = AssemblyName.GetAssemblyName(file).FullName;
-
+                
                 if (assemblyName == Assembly.GetExecutingAssembly().FullName)
                     continue;
                 if (applyBlackList && BlackListedModules.Contains(assemblyName))
@@ -56,7 +56,7 @@ namespace ModernSharp_Modules.Modules {
                         if (VerifyModule(module))
                             verifiedModules.Add(module);
 
-                    T core = (T)Activator.CreateInstance(typeof(T), new object[] { assemblyName, Path.GetFullPath(file), importedAssembly, verifiedModules.AsReadOnly() });
+                    ModuleCore core = new ModuleCore(assemblyName, Path.GetFullPath(file), importedAssembly, verifiedModules.AsReadOnly());
                     ModuleCores.Add(assemblyName, core);
                 }
             }
@@ -65,10 +65,10 @@ namespace ModernSharp_Modules.Modules {
         protected virtual bool VerifyModule(Type module) =>
             module.IsClass && module.BaseType == typeof(T);
 
-        public void BlacklistModule(T module) =>
+        public void BlacklistModule(ModuleCore module) =>
             BlackListedModules.Add(module.AssemblyName);
 
-        public void WhitelistModule(T module) =>
+        public void WhitelistModule(ModuleCore module) =>
             BlackListedModules.RemoveWhere(x => x == module.AssemblyName);
         #endregion
 

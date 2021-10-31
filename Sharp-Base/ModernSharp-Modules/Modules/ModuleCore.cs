@@ -23,6 +23,7 @@ namespace ModernSharp_Modules.Modules {
             AssemblyDirectory = assemblyDirectory;
             LoadedAssembly = loadedAssembly;
             VerifiedModules = verifiedModules;
+            LoadedModules = new List<ModuleViewModel>();
         }
         #endregion
 

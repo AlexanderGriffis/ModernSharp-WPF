@@ -1,8 +1,11 @@
 ﻿using FirstFloor.ModernUI.Windows.Controls;
 using FirstFloor.ModernUI.Windows.Navigation;
+using FirstFloor.ModernUI.Presentation;
 using ModernSharp_Base.ViewModels;
 using ModernSharp_Modules.Application;
+using ModernSharp_Modules.Modules;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,6 +18,7 @@ namespace ModernSharp_Base {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : ModernWindow {
+        private readonly ModuleLoader<ModuleViewModel> loader;
         public MainWindowViewModel ViewModel { get; private set; }
 
         public MainWindow() {
@@ -40,11 +44,51 @@ namespace ModernSharp_Base {
             ViewModel = new MainWindowViewModel(this);
             DataContext = ViewModel;
             #endregion
+
+            #region Initialize Module System
+            loader = new ModuleLoader<ModuleViewModel>(AppManager.ModuleDirectory, false);
+            loader.ImportModules(false);
+
+            foreach (KeyValuePair<string, ModuleCore> pair in loader.ModuleCores)
+                pair.Value.LoadAllModules();
+
+            LoadModules();
+            LoadShortcuts();
+            this.ContentSource = MenuLinkGroups.First().Links.First().Source;
+            #endregion
+        }
+
+        private void LoadShortcuts() {
+            foreach (AppShortcut sc in AppManager.ShortcutContainers) {
+                if (AppManager.SettingRead("KeysAccessKey", sc.Name, out string keyValue))
+                    sc.AccessKey = (Key)Enum.Parse(typeof(Key), keyValue);
+
+                if (AppManager.SettingRead("KeysModifierKey", sc.Name, out keyValue))
+                    sc.ModKeys = (ModifierKeys)Enum.Parse(typeof(ModifierKeys), keyValue);
+
+                if (sc.Command == null)
+                    sc.Command = NewNavigateLinkAction(sc.Source);
+            }
+        }
+
+        private void LoadModules() {
+            foreach(var module in AppManager.ModuleContainers) {
+                var group = MenuLinkGroups.FirstOrDefault((x) => x.GroupKey == module.Value.Item1);
+
+                if (group == null || group == MenuLinkGroups.DefaultIfEmpty()) {
+                    group = new LinkGroup() { DisplayName = module.Value.Item1, GroupKey = module.Value.Item1 };
+                    MenuLinkGroups.Add(group);
+                }
+
+                var link = new Link() { DisplayName = module.Key, Source = module.Value.Item2 };
+                group.Links.Add(link);
+            }
         }
 
         /// <summary>Check for keyboard shortcut inputs on Preview KeyDown.</summary>
         public void MainWindow_PreviewKeyDown(object sender, KeyEventArgs e) {
             List<AppShortcut> shortcuts = AppManager.ShortcutContainers.FindAll(x => (((Key)x.AccessKey) == e.Key && x.ModKeys == e.KeyboardDevice.Modifiers));
+
             shortcuts.ForEach(x => x?.Invoke());
 
             if (shortcuts.Count > 0)

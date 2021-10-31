@@ -1,9 +1,7 @@
 ﻿using FirstFloor.ModernUI.Presentation;
 using ModernSharp_Modules.Application;
-using ModernSharp_Modules.Modules;
 using ModernSharp_Modules.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -14,7 +12,6 @@ using System.Windows.Media.Animation;
 
 namespace ModernSharp_Base.ViewModels {
     public class MainWindowViewModel : NotifyableObject {
-        private readonly ModuleLoader<ModuleCore> loader;
         public Storyboard BackgroundAnimation { get; set; }
 
         public MainWindowViewModel(MainWindow window) {
@@ -36,19 +33,10 @@ namespace ModernSharp_Base.ViewModels {
 
             SetFontSize();
             LoadSettings();
-            LoadShortcuts();
 
             PropertyChanged += MainWindow_AppearanceChanged;
             PropertyChanged += MainWindow_KeybindingsChanged;
             UpdateVisualTheme();
-
-            #region Initialize Module System
-            loader = new ModuleLoader<ModuleCore>(AppManager.ModuleDirectory, false);
-            loader.ImportModules(false);
-
-            foreach (KeyValuePair<string, ModuleCore> pair in loader.ModuleCores)
-                pair.Value.LoadAllModules();
-            #endregion
             #endregion
         }
 
@@ -82,7 +70,7 @@ namespace ModernSharp_Base.ViewModels {
         /// <summary>List of colors for the theme.</summary>
         public Color[] AccentColors {
             get => new Color[] {
-                Color.FromRgb(0x33, 0x99, 0xff), // blue
+                Color.FromRgb(0x1e, 0x66, 0xd4), // blue
                 Color.FromRgb(0x00, 0xab, 0xa9), // teal
                 Color.FromRgb(0x33, 0x99, 0x33), // green
                 Color.FromRgb(0x8c, 0xbf, 0x26), // lime
@@ -153,32 +141,6 @@ namespace ModernSharp_Base.ViewModels {
                     select dict).FirstOrDefault();
         }
 
-        /// <summary>Load theme settings from file.</summary>
-        private void LoadSettings() {
-            AppManager.LoadSettings();
-            bool hasAccent = AppManager.SettingRead("Appearance", "Accent", out string accent);
-            bool hasFontSize = AppManager.SettingRead("Appearance", "FontSize", out string fontSize);
-            bool hasTheme = AppManager.SettingRead("Appearance", "Theme", out string theme);
-
-            if (hasTheme)
-                SelectedTheme = Themes.Where(x => x.DisplayName == theme).FirstOrDefault();
-
-            if (hasFontSize) SelectedFontSize = double.Parse(fontSize);
-
-            if (hasAccent)
-                try { SelectedAccent = (Color)ColorConverter.ConvertFromString(accent); } catch (Exception) { SelectedAccent = AccentColors.FirstOrDefault(); }
-        }
-
-        private void LoadShortcuts() {
-            foreach (AppShortcut sc in AppManager.ShortcutContainers) {
-                if (AppManager.SettingRead("KeysAccessKey", sc.Name, out string keyValue))
-                    sc.AccessKey = (Key)Enum.Parse(typeof(Key), keyValue);
-
-                if (AppManager.SettingRead("KeysModifierKey", sc.Name, out keyValue))
-                    sc.ModKeys = (ModifierKeys)Enum.Parse(typeof(ModifierKeys), keyValue);
-            }
-        }
-
         private void UpdateVisualTheme() {
             ThemeSource = SelectedTheme.Source;
             if (!AccentColors.Contains(SelectedAccent))
@@ -195,6 +157,22 @@ namespace ModernSharp_Base.ViewModels {
             } else {
                 isNotLoadingDefaultTheme = true;
             }
+        }
+
+        /// <summary>Load theme settings from file.</summary>
+        private void LoadSettings() {
+            AppManager.LoadSettings();
+            bool hasAccent = AppManager.SettingRead("Appearance", "Accent", out string accent);
+            bool hasFontSize = AppManager.SettingRead("Appearance", "FontSize", out string fontSize);
+            bool hasTheme = AppManager.SettingRead("Appearance", "Theme", out string theme);
+
+            if (hasTheme)
+                SelectedTheme = Themes.Where(x => x.DisplayName == theme).FirstOrDefault();
+
+            if (hasFontSize) SelectedFontSize = double.Parse(fontSize);
+
+            if (hasAccent)
+                try { SelectedAccent = (Color)ColorConverter.ConvertFromString(accent); } catch (Exception) { SelectedAccent = AccentColors.FirstOrDefault(); }
         }
         #endregion
     }

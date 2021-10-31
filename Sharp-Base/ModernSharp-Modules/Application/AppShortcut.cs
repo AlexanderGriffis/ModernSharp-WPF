@@ -15,6 +15,8 @@ namespace ModernSharp_Modules.Application {
         public ModifierKeys ModKeys { get; set; }
         /// <summary>Command (method) to execute when this shortcut is pressed.</summary>
         public Action Command { get; set; }
+        /// <summary>Source URI to load.</summary>
+        public Uri Source { get; set; }
         #endregion
 
         #region Private Fields
@@ -36,6 +38,22 @@ namespace ModernSharp_Modules.Application {
             AccessKey = accessKey;
             ModKeys = modKeys;
             Command = command;
+
+            defaultKey = AccessKey;
+            defaultModifiers = modKeys;
+        }
+
+        /// <summary>Constructs a new application keyboard shortcut.</summary>
+        /// <param name="shortcutName">Name of the shortcut.</param>
+        /// <param name="accessKey">Main key (non-modifier) for the shortcut.</param>
+        /// <param name="modKeys">Set of modifier keys for the shortcut.</param>
+        /// <param name="command">Command (method) to execute when this shortcut is pressed.</param>
+        public AppShortcut(string shortcutName, string description, Key accessKey, ModifierKeys modKeys, Uri source) {
+            Name = shortcutName;
+            Description = description;
+            AccessKey = accessKey;
+            ModKeys = modKeys;
+            Source = source;
 
             defaultKey = AccessKey;
             defaultModifiers = modKeys;

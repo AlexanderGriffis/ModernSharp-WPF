@@ -1,4 +1,5 @@
-﻿using ModernSharp_Modules.Utilities;
+﻿using FirstFloor.ModernUI.Windows.Navigation;
+using ModernSharp_Modules.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,10 +20,22 @@ namespace ModernSharp_Modules.Application {
         #region Internal Properties
         internal static List<AppShortcut> ShortcutContainers { get; set; } = new List<AppShortcut>();
         internal static List<AppSettings> SettingsContainers { get; set; } = new List<AppSettings>();
+        internal static Dictionary<string, Tuple<string, Uri>> ModuleContainers { get; set; } = new Dictionary<string, Tuple<string, Uri>>();
         internal static XmlManager Settings { get; set; } = new XmlManager(@"Settings\", "AppSettings", "Settings", true);
         #endregion
 
         #region Public Application Interface
+        /// <summary>Adds a new module to the interface</summary>
+        /// <param name="moduleName"></param>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static bool RegisterModule(string moduleName, string groupKey, Uri source) {
+            bool moduleExists = ModuleContainers.ContainsKey(moduleName);
+            if (!moduleExists)
+                ModuleContainers.Add(moduleName, new Tuple<string, Uri>(groupKey, source));
+            return moduleExists;
+        }
+
         /// <summary>Registers a new shortcut with the specified key and modifiers if one doesn't already exist.</summary>
         /// <param name="shortcutName">Name of the shortcut.</param>
         /// <param name="accessKey">Main key for the shortcut.</param>
@@ -35,6 +48,22 @@ namespace ModernSharp_Modules.Application {
 
             if (!shortcutExists)
                 ShortcutContainers.Add(new AppShortcut(shortcutName, description, accessKey, modKeys, command));
+
+            return shortcutExists;
+        }
+
+        /// <summary>Registers a new shortcut with the specified key and modifiers if one doesn't already exist.</summary>
+        /// <param name="shortcutName">Name of the shortcut.</param>
+        /// <param name="accessKey">Main key for the shortcut.</param>
+        /// <param name="modKeys">Modifier keys for the shortcut.</param>
+        /// <param name="source">Source URI to navigate to.</param>
+        /// <returns>True if the shortcut could be created, else false.</returns>
+        public static bool RegisterShortcut(string shortcutName, string description, Key accessKey, ModifierKeys modKeys, Uri source) {
+            if (shortcutName.Contains(' ')) throw new Exception("ERROR: SPACE IN SHORTCUT SETTINGS NAME: " + shortcutName.ToString());
+            bool shortcutExists = ShortcutContainers.Any(x => (x.Name == shortcutName && x.AccessKey == accessKey && x.ModKeys == modKeys));
+
+            if (!shortcutExists)
+                ShortcutContainers.Add(new AppShortcut(shortcutName, description, accessKey, modKeys, source));
 
             return shortcutExists;
         }

@@ -6,7 +6,7 @@
         xmlns:mui="http://firstfloorsoftware.com/ModernUI"
         xmlns:local="clr-namespace:ModernSharp_Base"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="1080" Width="1920">
     <mui:ModernWindow.TitleLinks>
         <mui:Link DisplayName="Settings" Source="/Controls/SettingsManager.xaml"/>
     </mui:ModernWindow.TitleLinks>

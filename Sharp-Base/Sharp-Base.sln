@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30503.244
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModernSharp-Base", "ModernSharp-Base\ModernSharp-Base.csproj", "{D70EE049-05FC-4BA4-BB43-26CAB81C18F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModernSharp-Modules", "ModernSharp-Modules\ModernSharp-Modules.csproj", "{210FB900-A5CC-40A4-9476-1330DAD208CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModernSharp-Modules", "ModernSharp-Modules\ModernSharp-Modules.csproj", "{210FB900-A5CC-40A4-9476-1330DAD208CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleModule", "SampleModule\SampleModule.csproj", "{03A88BFA-B22C-48DE-9467-E69761FB59B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{210FB900-A5CC-40A4-9476-1330DAD208CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{210FB900-A5CC-40A4-9476-1330DAD208CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{210FB900-A5CC-40A4-9476-1330DAD208CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03A88BFA-B22C-48DE-9467-E69761FB59B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03A88BFA-B22C-48DE-9467-E69761FB59B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03A88BFA-B22C-48DE-9467-E69761FB59B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03A88BFA-B22C-48DE-9467-E69761FB59B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
