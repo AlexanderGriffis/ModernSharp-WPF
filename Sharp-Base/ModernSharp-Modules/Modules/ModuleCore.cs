@@ -34,6 +34,7 @@ namespace ModernSharp_Modules.Modules {
 
             ModuleViewModel moduleInstance = (ModuleViewModel)Activator.CreateInstance(module);
             LoadedModules.Add(moduleInstance);
+            moduleInstance.OnAssemble();
         }
 
         public virtual void LoadAllModules() {

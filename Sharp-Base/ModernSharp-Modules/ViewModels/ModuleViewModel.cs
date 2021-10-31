@@ -11,8 +11,10 @@ namespace ModernSharp_Modules.Modules {
         #endregion
 
         #region Destructor
-        ~ModuleViewModel() =>
+        ~ModuleViewModel() {
+            OnDisassemble();
             Dispose(false);
+        }
         #endregion
 
         #region Dispose Pattern
