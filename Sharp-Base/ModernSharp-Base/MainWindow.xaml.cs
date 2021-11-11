@@ -54,7 +54,9 @@ namespace ModernSharp_Base {
 
             LoadModules();
             LoadShortcuts();
-            this.ContentSource = MenuLinkGroups.First().Links.First().Source;
+
+            if (MenuLinkGroups.FirstOrDefault()?.Links.Count > 0)
+                this.ContentSource = MenuLinkGroups.First().Links.FirstOrDefault().Source;
             #endregion
         }
 
